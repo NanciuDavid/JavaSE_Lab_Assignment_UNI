@@ -1,0 +1,76 @@
+1. Create an interface called Playable in the "ro.ase.acs.contracts" package
+	Add the following abstract method to this interface
+		public float getPoints()
+		
+2. Modify the PlayingCard class from the "ro.ase.acs.models" package
+	with the following protected fields:
+	- rank (string): 2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A (no validations are necessary)
+	- suit (string): S - Spade, D - Diamond, H - Heart, C - Club (if the suit is invalid an exception is thrown)
+	- quantity (integer) - how many cards of that type
+	- add the following constructor to the class PlayingCard(rank, suit, quantity)
+	
+3. Inherit this class from the Playable interface and override the abstract method getPoints().
+	The method will return 0 for now
+	Add the following abstract method to the PlayingCard class:
+		public boolean isGameOver(PlayingCard card)
+	
+4. Modify the BlackJackPlayingCard class from the "ro.ase.acs.models" package
+	the class inherits PlayingCard and will have an additional private field called score (from 2 to 13),
+	computed by the constructor (rank, suit, quantity) in the following manner:
+	- if the rank is from 2 to 9, the score is equal to the rank
+	- for T (ten) the score is 10, for A (Ace) the score is 11
+	- for J (Jack) the score is 12, for Q (Queen) the score is 13 and for K (King) the score is 14
+	
+5. Override the isGameOver(PlayingCard card) method to return if the total score of the two cards is over 21
+	(e.g. if the method is called on a Ace of Club with the quantity set to 1 and has as parameter a 3 of Spade with the
+	quantity set to 2, the method will return false because 1 x 11 + 3 x 2 = 17 <= 21)
+	You can use casting to transform PlayingCards into BlackJackPlayingCards
+
+6. Add to ability to the class BlackJackPlayingCard to create deep copies (to be cloned)
+	and add getters for rank, suit and quantity
+	Override the getPoints() method to return the score
+
+7. Override the toString() method for the BlackJackPlayingCard class
+	The method will display a line with the following details:
+	"> 4 D 2 4"
+	where 4 is the rank, D the suit, 2 the quantity and 4 the score
+	
+8. Use a Java Collection, at your choice, to implement the BlackJack game logic
+ Add the following two static methods to the BlackJackPlayingCard.java class:
+ 	- void drawCard(BlackJackPlayingCard)
+ 	- String getStatus()
+ The game will not allow duplicate cards. In this scenario it will increment the quantity of the existing card.
+ Example:
+ 	If I will draw the following cards:
+ 		- 2 of Spade quantity 1
+ 		- Jack of Heart quantity 1
+ 		- 2 of Spade quantity 1
+ 		
+ The getStatus method should return the following string (not necessarily in this order):
+"> 2 S 2 2
+ > J H 1 12
+ 
+still in the game" - because the current score is 16
+
+	If we draw another card, let's say a 7 of Club with quantity 2, the method will return:
+"> 2 S 2 2
+ > J H 1 12
+ > 7 C 2 7
+ 
+game over" - because the current score is 30
+
+9. Initialize the lambdaOperation field from the Utils.java class 
+with a lambda expression that computes the average value of the data series
+E.g. if the parameter is an array like { 1, 2, 3 }, the function should return 2
+
+We consider a deck of playing cards in the following format:
+Ranks: 2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A
+Suits: S - Spade, D - Diamond, H - Heart, C - Club
+
+Every card will be identified by 2 characters
+E.g. "3S" (3 of Spades), "TC" (10 of Club), "AH" (Ace of Heart)
+
+10. Modify the getCardsByRank function from Utils.java in order to return a Stream
+with all the DISTINCT cards of that rank, alphabetically SORTED
+E.g. for a list that contains "2H", "2S", "TH" and the rank is '2'
+the result should be a stream containing "2H" and "2S" in this order
